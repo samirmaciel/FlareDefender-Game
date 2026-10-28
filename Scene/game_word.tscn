@@ -1,20 +1,8 @@
 [gd_scene format=3 uid="uid://bfntrl0ah4crj"]
 
-[ext_resource type="Script" uid="uid://ba2i4jerd5aqj" path="res://Scripts/player_controller.gd" id="1_hwkw7"]
-[ext_resource type="Script" uid="uid://cyhwnslwoeq4p" path="res://Scripts/player_stats.gd" id="2_stats"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_614an"]
-radius = 36.0
-height = 122.0
+[ext_resource type="PackedScene" uid="uid://cdf7om42uh078" path="res://Entities/player.tscn" id="1_hwkw7"]
 
 [node name="GameWord" type="Node2D" unique_id=1372143455]
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=503151280]
+[node name="Player" parent="." unique_id=1442563100 instance=ExtResource("1_hwkw7")]
 position = Vector2(503, 292)
-script = ExtResource("1_hwkw7")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1693524420]
-shape = SubResource("CapsuleShape2D_614an")
-
-[node name="PlayerStats" type="Node" parent="CharacterBody2D" unique_id=1068307486]
-script = ExtResource("2_stats")
