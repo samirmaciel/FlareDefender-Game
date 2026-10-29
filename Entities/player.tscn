@@ -252,3 +252,10 @@ texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_614an")
 animation = &"Idle"
 autoplay = "Idle"
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=568440438]
+zoom = Vector2(0.7, 0.7)
+limit_left = -1800
+limit_top = -2050
+limit_right = 4200
+limit_bottom = 3050
