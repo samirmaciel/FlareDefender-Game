@@ -1,25 +1,70 @@
 extends CharacterBody2D
+class_name PlayerController
+
+enum HeldItem { NONE, AXE, GOLD, HAMMER, KNIFE, MEAT, PICKAXE, WOOD }
+
+signal held_item_changed(item: HeldItem)
 
 @export var move_speed := 240.0
 @export var sprint_speed := 360.0
 @export var sprint_animation_speed_scale := 1.6
+@export var held_item: HeldItem = HeldItem.AXE
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var stats: PlayerStats = $PlayerStats
 
 var facing_left := false
-var is_attacking := false
-var next_attack_animation := "Attack"
+var is_interacting := false
+
+const IDLE_ANIMATIONS := {
+	HeldItem.NONE: "Idle",
+	HeldItem.AXE: "Idle Axe",
+	HeldItem.GOLD: "Idle Gold",
+	HeldItem.HAMMER: "Idle Hammer",
+	HeldItem.KNIFE: "Idle Knife",
+	HeldItem.MEAT: "Idle Meat",
+	HeldItem.PICKAXE: "Idle Pickaxe",
+	HeldItem.WOOD: "Idle Wood",
+}
+
+const MOVE_ANIMATIONS := {
+	HeldItem.NONE: "Run",
+	HeldItem.AXE: "Run Axe",
+	HeldItem.GOLD: "Run Gold",
+	HeldItem.HAMMER: "Run Hammer",
+	HeldItem.KNIFE: "Run Knife",
+	HeldItem.MEAT: "Run Meat",
+	HeldItem.PICKAXE: "Run Pickaxe",
+	HeldItem.WOOD: "Run Wood",
+}
+
+const ACTION_ANIMATIONS := {
+	HeldItem.AXE: "Interact Axe",
+	HeldItem.HAMMER: "Interact Hammer",
+	HeldItem.KNIFE: "Interact Knife",
+	HeldItem.PICKAXE: "Interact Pickaxe",
+}
 
 func _ready() -> void:
 	animated_sprite.animation_finished.connect(_on_animation_finished)
 	animated_sprite.flip_h = false
-	animated_sprite.play("Idle")
+	# Item interactions should finish so the controller can return to idle/run.
+	for animation_name in ACTION_ANIMATIONS.values():
+		animated_sprite.sprite_frames.set_animation_loop(animation_name, false)
+	_play_if_needed(IDLE_ANIMATIONS[held_item])
+
+func equip_item(item: HeldItem) -> void:
+	if held_item == item:
+		return
+	held_item = item
+	held_item_changed.emit(held_item)
+	if not is_interacting and not Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+		_play_if_needed(IDLE_ANIMATIONS[held_item])
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT and not is_attacking and not Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-			_start_attack()
+		if event.button_index == MOUSE_BUTTON_LEFT and not is_interacting and not Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+			_start_interaction()
 
 func _physics_process(_delta: float) -> void:
 	var direction := Vector2.ZERO
@@ -28,6 +73,14 @@ func _physics_process(_delta: float) -> void:
 	direction.y = float(Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN))
 	direction.y -= float(Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP))
 	direction = direction.normalized()
+
+	if is_interacting and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+		is_interacting = false
+	if is_interacting:
+		velocity = Vector2.ZERO
+		stats.update_stamina(false, _delta)
+		move_and_slide()
+		return
 
 	if absf(direction.x) > 0.01:
 		facing_left = direction.x < 0.0
@@ -44,30 +97,30 @@ func _physics_process(_delta: float) -> void:
 
 func _update_animation(direction: Vector2, sprinting: bool) -> void:
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
-		is_attacking = false
-		animated_sprite.speed_scale = 1.0
-		if animated_sprite.animation != "Guard":
-			animated_sprite.play("Guard")
-		return
+		is_interacting = false
 
-	if is_attacking:
+	if is_interacting:
 		return
 
 	if direction.is_zero_approx():
 		animated_sprite.speed_scale = 1.0
-		if animated_sprite.animation != "Idle":
-			animated_sprite.play("Idle")
+		_play_if_needed(IDLE_ANIMATIONS[held_item])
 	else:
 		animated_sprite.speed_scale = sprint_animation_speed_scale if sprinting else 1.0
-		if animated_sprite.animation != "Walking":
-			animated_sprite.play("Walking")
+		_play_if_needed(MOVE_ANIMATIONS[held_item])
 
-func _start_attack() -> void:
-	is_attacking = true
+func _start_interaction() -> void:
+	var action_animation: String = ACTION_ANIMATIONS.get(held_item, "")
+	if action_animation.is_empty():
+		return
+	is_interacting = true
 	animated_sprite.speed_scale = 1.0
-	animated_sprite.play(next_attack_animation)
-	next_attack_animation = "Attack2" if next_attack_animation == "Attack" else "Attack"
+	animated_sprite.play(action_animation)
 
 func _on_animation_finished() -> void:
-	if is_attacking:
-		is_attacking = false
+	if is_interacting:
+		is_interacting = false
+
+func _play_if_needed(animation_name: String) -> void:
+	if animated_sprite.animation != animation_name:
+		animated_sprite.play(animation_name)
