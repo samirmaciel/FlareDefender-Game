@@ -36,7 +36,9 @@ func _update_tree_sort_order() -> void:
 	elif player_collision and player_collision.shape is RectangleShape2D:
 		player_half_height = (player_collision.shape as RectangleShape2D).size.y * 0.5
 	var player_feet_y := player.global_position.y + player_collision.position.y + player_half_height if player_collision else player.global_position.y
-	tree_sprite.z_index = 2 if player_feet_y < global_position.y else 0
+	var sprite_z_index := 2 if player_feet_y < global_position.y else 0
+	tree_sprite.z_index = sprite_z_index
+	stump_sprite.z_index = sprite_z_index
 
 func harvest() -> void:
 	if harvested:
