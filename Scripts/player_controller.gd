@@ -8,7 +8,7 @@ signal held_item_changed(item: HeldItem)
 @export var move_speed := 240.0
 @export var sprint_speed := 360.0
 @export var sprint_animation_speed_scale := 1.6
-@export var held_item: HeldItem = HeldItem.AXE
+@export var held_item: HeldItem = HeldItem.KNIFE
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var stats: PlayerStats = $PlayerStats
@@ -117,8 +117,38 @@ func _start_interaction() -> void:
 	animated_sprite.speed_scale = 1.0
 	animated_sprite.play(action_animation)
 
+func _harvest_tree_in_front() -> void:
+	var facing := Vector2.LEFT if facing_left else Vector2.RIGHT
+	var best_tree: HarvestableTree
+	var best_distance := 60.0
+	var player_feet_y := global_position.y
+	var player_collision := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if player_collision:
+		player_feet_y += player_collision.position.y
+		if player_collision.shape is CapsuleShape2D:
+			player_feet_y += (player_collision.shape as CapsuleShape2D).height * 0.5
+		elif player_collision.shape is RectangleShape2D:
+			player_feet_y += (player_collision.shape as RectangleShape2D).size.y * 0.5
+	const SIDE_HIT_VERTICAL_TOLERANCE := 24.0
+	for node in get_tree().get_nodes_in_group("harvestable_trees"):
+		if not is_instance_valid(node) or node.harvested:
+			continue
+		var offset: Vector2 = node.global_position - global_position
+		var distance := offset.length()
+		# Align the player's feet with the tree base so attacks from above or
+		# below are rejected even when the player is diagonally nearby.
+		var feet_to_tree_base := absf(player_feet_y - node.global_position.y)
+		if distance > best_distance or offset.dot(facing) <= 0.0 or feet_to_tree_base > SIDE_HIT_VERTICAL_TOLERANCE:
+			continue
+		best_tree = node
+		best_distance = distance
+	if best_tree:
+		best_tree.harvest()
+
 func _on_animation_finished() -> void:
 	if is_interacting:
+		if held_item == HeldItem.AXE and animated_sprite.animation == ACTION_ANIMATIONS[HeldItem.AXE]:
+			_harvest_tree_in_front()
 		is_interacting = false
 
 func _play_if_needed(animation_name: String) -> void:

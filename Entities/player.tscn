@@ -23,10 +23,6 @@
 [ext_resource type="Texture2D" uid="uid://ko5na1lqwb1a" path="res://Sprites/Pawn/Pawn_Run Pickaxe.png" id="24_2wdsq"]
 [ext_resource type="Texture2D" uid="uid://bketrn7am4ppl" path="res://Sprites/Pawn/Pawn_Run Wood.png" id="25_llc5e"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_614an"]
-radius = 20.0
-height = 70.0
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_6jj0l"]
 atlas = ExtResource("6_s1j76")
 region = Rect2(0, 0, 192, 192)
@@ -1047,13 +1043,12 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="CharacterBody2D" unique_id=1442563100]
-script = ExtResource("1_gb1tc")
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0a0uo"]
+size = Vector2(37, 10)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=702786029]
-visible = false
-position = Vector2(-1, 0)
-shape = SubResource("CapsuleShape2D_614an")
+[node name="Player" type="CharacterBody2D" unique_id=1442563100]
+z_index = 1
+script = ExtResource("1_gb1tc")
 
 [node name="PlayerStats" type="Node" parent="." unique_id=1768459503]
 script = ExtResource("2_xd3k7")
@@ -1061,7 +1056,7 @@ script = ExtResource("2_xd3k7")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=106704986]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_614an")
-animation = &"Idle Wood"
+animation = &"Idle"
 autoplay = "Idle"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=568440438]
@@ -1070,3 +1065,7 @@ limit_left = -1800
 limit_top = -2050
 limit_right = 4200
 limit_bottom = 3050
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=702786029]
+position = Vector2(0.5, 27)
+shape = SubResource("RectangleShape2D_0a0uo")

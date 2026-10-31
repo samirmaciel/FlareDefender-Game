@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://bty3b2w8imj1u"]
+
+[ext_resource type="Script" uid="uid://cpvpu2yvrflx1" path="res://Scripts/harvestable_tree.gd" id="1_tree"]
+[ext_resource type="Texture2D" uid="uid://bi5i1e30pkel8" path="res://Sprites/Resources/Wood/Trees/Tree1.png" id="2_tree_texture"]
+[ext_resource type="Texture2D" uid="uid://qm4ad1tmpun" path="res://Sprites/Resources/Wood/Trees/Stump 1.png" id="3_stump_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_18pkl"]
+size = Vector2(42, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0a0uo"]
+atlas = ExtResource("3_stump_texture")
+region = Rect2(72, 200, 48, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_614an"]
+atlas = ExtResource("2_tree_texture")
+region = Rect2(800, 48, 128, 192)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_614an"]
+size = Vector2(42, 23)
+
+[node name="HarvestableTree" type="Area2D" unique_id=1605297398]
+collision_layer = 0
+script = ExtResource("1_tree")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=438209034]
+position = Vector2(1, -4)
+shape = SubResource("RectangleShape2D_18pkl")
+
+[node name="StumpSprite" type="Sprite2D" parent="." unique_id=706743087]
+texture = SubResource("AtlasTexture_0a0uo")
+
+[node name="TreeSprite" type="Sprite2D" parent="." unique_id=1216189656]
+z_index = 2
+position = Vector2(1, -76)
+texture = SubResource("AtlasTexture_614an")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=468377826]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1762848645]
+position = Vector2(1, 1.5)
+shape = SubResource("RectangleShape2D_614an")
