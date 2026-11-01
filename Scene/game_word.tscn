@@ -1121,3 +1121,18 @@ position = Vector2(878, 851)
 
 [node name="HarvestableTree2" parent="." unique_id=914731746 instance=ExtResource("7_harvestable_tree")]
 position = Vector2(1283, 767)
+
+[node name="HarvestableTree3" parent="." unique_id=1984359636 instance=ExtResource("7_harvestable_tree")]
+position = Vector2(408, 848)
+
+[node name="HarvestableTree4" parent="." unique_id=174691594 instance=ExtResource("7_harvestable_tree")]
+position = Vector2(552, 520)
+
+[node name="HarvestableTree5" parent="." unique_id=1444852878 instance=ExtResource("7_harvestable_tree")]
+position = Vector2(681, 734)
+
+[node name="HarvestableTree6" parent="." unique_id=1481419790 instance=ExtResource("7_harvestable_tree")]
+position = Vector2(466, 528)
+
+[node name="HarvestableTree7" parent="." unique_id=74142743 instance=ExtResource("7_harvestable_tree")]
+position = Vector2(473, 612)

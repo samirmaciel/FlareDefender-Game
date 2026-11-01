@@ -1,20 +1,20 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://capl5opydnle3"]
 
-[ext_resource type="Script" path="res://Scripts/wood_resource.gd" id="1_wood"]
-[ext_resource type="Texture2D" path="res://Sprites/Resources/Wood/Wood Resource/Wood Resource.png" id="2_wood_texture"]
+[ext_resource type="Script" uid="uid://egoupjamhxjj" path="res://Scripts/wood_resource.gd" id="1_wood"]
+[ext_resource type="Texture2D" uid="uid://c523yc0308nm" path="res://Sprites/Resources/Wood/Wood Resource/Wood Resource.png" id="2_wood_texture"]
 
-[sub_resource type="CircleShape2D" id="CircleShape_wood"]
-radius = 14.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tqllb"]
+size = Vector2(47, 27)
 
-[node name="WoodResource" type="Area2D"]
+[node name="WoodResource" type="Area2D" unique_id=597974390]
 collision_layer = 0
-collision_mask = 1
 script = ExtResource("1_wood")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1971616410]
 texture = ExtResource("2_wood_texture")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape_wood")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1713335116]
+position = Vector2(0.5, -0.5)
+shape = SubResource("RectangleShape2D_tqllb")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

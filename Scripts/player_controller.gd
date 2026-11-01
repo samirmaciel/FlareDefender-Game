@@ -45,6 +45,9 @@ const ACTION_ANIMATIONS := {
 	HeldItem.PICKAXE: "Interact Pickaxe",
 }
 
+const TREE_OCCLUDED_ALPHA := 0.4
+const TREE_OCCLUSION_RADIUS := 80.0
+
 func _ready() -> void:
 	animated_sprite.animation_finished.connect(_on_animation_finished)
 	animated_sprite.flip_h = false
@@ -67,6 +70,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			_start_interaction()
 
 func _physics_process(_delta: float) -> void:
+	_update_tree_sort_order()
 	var direction := Vector2.ZERO
 	direction.x = float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT))
 	direction.x -= float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT))
@@ -94,6 +98,29 @@ func _physics_process(_delta: float) -> void:
 	velocity = direction * current_speed
 	move_and_slide()
 	_update_animation(direction, sprinting)
+
+func _update_tree_sort_order() -> void:
+	var player_feet_y := global_position.y
+	var player_collision := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if player_collision:
+		player_feet_y += player_collision.position.y
+		if player_collision.shape is CapsuleShape2D:
+			player_feet_y += (player_collision.shape as CapsuleShape2D).height * 0.5
+		elif player_collision.shape is RectangleShape2D:
+			player_feet_y += (player_collision.shape as RectangleShape2D).size.y * 0.5
+
+	for node in get_tree().get_nodes_in_group("harvestable_trees"):
+		if not is_instance_valid(node):
+			continue
+		var tree := node as HarvestableTree
+		var player_is_near_tree := global_position.distance_to(tree.global_position) <= TREE_OCCLUSION_RADIUS
+		var player_is_behind_tree := player_feet_y < tree.global_position.y
+		var sprite_z_index := 2 if player_is_behind_tree else 0
+		tree.tree_sprite.z_index = sprite_z_index
+		tree.stump_sprite.z_index = sprite_z_index
+		var tree_modulate := tree.tree_sprite.modulate
+		tree_modulate.a = TREE_OCCLUDED_ALPHA if player_is_behind_tree and player_is_near_tree else 1.0
+		tree.tree_sprite.modulate = tree_modulate
 
 func _update_animation(direction: Vector2, sprinting: bool) -> void:
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
