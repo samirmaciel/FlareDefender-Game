@@ -43,7 +43,18 @@ func _shake_tree() -> void:
 
 func _drop_wood() -> void:
 	var wood_scene := preload("res://Entities/wood_resource.tscn")
-	for index in wood_drop_count:
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	for _index in wood_drop_count:
 		var wood := wood_scene.instantiate()
 		get_tree().current_scene.add_child(wood)
-		wood.global_position = global_position + Vector2((index - (wood_drop_count - 1) * 0.5) * 20.0, 4.0)
+		var angle := rng.randf_range(0.0, TAU)
+		var distance := rng.randf_range(48.0, 72.0)
+		var offset := Vector2.RIGHT.rotated(angle) * distance
+		var start_position := stump_sprite.global_position
+		var landing_position := start_position + offset
+		var arc_position := start_position + offset * 0.5 + Vector2.UP * 28.0
+		wood.global_position = start_position
+		var drop_tween := wood.create_tween()
+		drop_tween.tween_property(wood, "global_position", arc_position, 0.18).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		drop_tween.tween_property(wood, "global_position", landing_position, 0.22).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
