@@ -1049,6 +1049,7 @@ size = Vector2(37, 10)
 [node name="Player" type="CharacterBody2D" unique_id=1442563100]
 z_index = 1
 script = ExtResource("1_gb1tc")
+held_item = 6
 
 [node name="PlayerStats" type="Node" parent="." unique_id=1768459503]
 script = ExtResource("2_xd3k7")
