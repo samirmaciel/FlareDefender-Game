@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://c6pqdbpaj3ydh"]
+
+[ext_resource type="Script" path="res://Scripts/gold_resource.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://ckuple41tacsw" path="res://Sprites/Resources/Gold/Gold Stones/Gold Stone 1.png" id="2_gold"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gold_resource"]
+radius = 12.0
+
+[node name="GoldResource" type="Area2D" unique_id=703691081]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=703691082]
+texture = ExtResource("2_gold")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=703691083]
+shape = SubResource("CircleShape2D_gold_resource")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

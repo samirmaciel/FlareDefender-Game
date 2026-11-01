@@ -8,7 +8,7 @@ signal held_item_changed(item: HeldItem)
 @export var move_speed := 240.0
 @export var sprint_speed := 360.0
 @export var sprint_animation_speed_scale := 1.6
-@export var held_item: HeldItem = HeldItem.KNIFE
+@export var held_item: HeldItem = HeldItem.PICKAXE
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var stats: PlayerStats = $PlayerStats
@@ -122,6 +122,18 @@ func _update_tree_sort_order() -> void:
 		tree_modulate.a = TREE_OCCLUDED_ALPHA if player_is_behind_tree and player_is_near_tree else 1.0
 		tree.tree_sprite.modulate = tree_modulate
 
+	for node in get_tree().get_nodes_in_group("harvestable_gold"):
+		if not is_instance_valid(node):
+			continue
+		var gold := node as HarvestableGold
+		var gold_base_position := gold.solid_collision.global_position
+		var player_is_near_gold := global_position.distance_to(gold_base_position) <= TREE_OCCLUSION_RADIUS
+		var player_is_behind_gold := player_feet_y < gold_base_position.y
+		gold.gold_sprite.z_index = 2 if player_is_behind_gold else 0
+		var gold_modulate := gold.gold_sprite.modulate
+		gold_modulate.a = TREE_OCCLUDED_ALPHA if player_is_behind_gold and player_is_near_gold else 1.0
+		gold.gold_sprite.modulate = gold_modulate
+
 func _update_animation(direction: Vector2, sprinting: bool) -> void:
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		is_interacting = false
@@ -172,10 +184,41 @@ func _harvest_tree_in_front() -> void:
 	if best_tree:
 		best_tree.harvest()
 
+func _mine_gold_in_front() -> void:
+	var facing := Vector2.LEFT if facing_left else Vector2.RIGHT
+	var best_gold: HarvestableGold
+	var best_distance := 60.0
+	var player_feet_y := global_position.y
+	var player_collision := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if player_collision:
+		player_feet_y += player_collision.position.y
+		if player_collision.shape is CapsuleShape2D:
+			player_feet_y += (player_collision.shape as CapsuleShape2D).height * 0.5
+		elif player_collision.shape is RectangleShape2D:
+			player_feet_y += (player_collision.shape as RectangleShape2D).size.y * 0.5
+	const SIDE_HIT_VERTICAL_TOLERANCE := 24.0
+	for node in get_tree().get_nodes_in_group("harvestable_gold"):
+		if not is_instance_valid(node):
+			continue
+		var gold := node as HarvestableGold
+		if gold.mined:
+			continue
+		var offset: Vector2 = gold.global_position - global_position
+		var distance := offset.length()
+		var feet_to_gold := absf(player_feet_y - gold.global_position.y)
+		if distance > best_distance or offset.dot(facing) <= 0.0 or feet_to_gold > SIDE_HIT_VERTICAL_TOLERANCE:
+			continue
+		best_gold = gold
+		best_distance = distance
+	if best_gold:
+		best_gold.mine()
+
 func _on_animation_finished() -> void:
 	if is_interacting:
 		if held_item == HeldItem.AXE and animated_sprite.animation == ACTION_ANIMATIONS[HeldItem.AXE]:
 			_harvest_tree_in_front()
+		elif held_item == HeldItem.PICKAXE and animated_sprite.animation == ACTION_ANIMATIONS[HeldItem.PICKAXE]:
+			_mine_gold_in_front()
 		is_interacting = false
 
 func _play_if_needed(animation_name: String) -> void:

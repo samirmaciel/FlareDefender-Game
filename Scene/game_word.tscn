@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cpbkmn5w68ehn" path="res://Sprites/Decorations/Bushes/Bushe3.png" id="5_e8dex"]
 [ext_resource type="Texture2D" uid="uid://d2i3x2uy3at3t" path="res://Sprites/Decorations/Bushes/Bushe4.png" id="6_sxm1o"]
 [ext_resource type="PackedScene" uid="uid://bty3b2w8imj1u" path="res://Entities/harvestable_tree.tscn" id="7_harvestable_tree"]
+[ext_resource type="PackedScene" uid="uid://dru70e7r3c3cs" path="res://Entities/harvestable_gold.tscn" id="8_topcr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ag1y8"]
 texture = ExtResource("2_572h1")
@@ -1113,8 +1114,8 @@ tile_map_data = PackedByteArray("AAAvAEMAAAACAAIAAABcAD8AAAACAAIAAAA=")
 tile_set = SubResource("TileSet_6n6ql")
 
 [node name="Player" parent="." unique_id=1442563100 instance=ExtResource("1_hwkw7")]
-position = Vector2(1105, 878)
-held_item = 1
+position = Vector2(984, 747)
+held_item = 6
 
 [node name="HarvestableTree" parent="." unique_id=1605297398 instance=ExtResource("7_harvestable_tree")]
 position = Vector2(878, 851)
@@ -1136,3 +1137,6 @@ position = Vector2(466, 528)
 
 [node name="HarvestableTree7" parent="." unique_id=74142743 instance=ExtResource("7_harvestable_tree")]
 position = Vector2(473, 612)
+
+[node name="harvestable_gold" parent="." unique_id=2072266862 instance=ExtResource("8_topcr")]
+position = Vector2(1074, 993)
