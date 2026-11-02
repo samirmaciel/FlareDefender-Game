@@ -49,6 +49,7 @@ const ACTION_ANIMATIONS := {
 
 const TREE_OCCLUDED_ALPHA := 0.4
 const TREE_OCCLUSION_RADIUS := 80.0
+const DEPTH_SORT_OFFSET := 1030
 
 func _ready() -> void:
 	add_to_group("player")
@@ -145,18 +146,28 @@ func _update_tree_sort_order() -> void:
 			player_feet_y += (player_collision.shape as CapsuleShape2D).height * 0.5
 		elif player_collision.shape is RectangleShape2D:
 			player_feet_y += (player_collision.shape as RectangleShape2D).size.y * 0.5
+	# Use the same world-depth scale as enemies and trees so all three sort
+	# consistently, even when an orc moves behind a tree.
+	z_index = _depth_sort_index(player_feet_y)
 
 	for node in get_tree().get_nodes_in_group("harvestable_trees"):
 		if not is_instance_valid(node):
 			continue
 		var tree := node as HarvestableTree
-		var player_is_near_tree := global_position.distance_to(tree.global_position) <= TREE_OCCLUSION_RADIUS
-		var player_is_behind_tree := player_feet_y < tree.global_position.y
-		var sprite_z_index := 2 if player_is_behind_tree else 0
-		tree.tree_sprite.z_index = sprite_z_index
-		tree.stump_sprite.z_index = sprite_z_index
+		var tree_base_y := tree.global_position.y
+		tree.z_index = _depth_sort_index(tree_base_y)
+		tree.tree_sprite.z_index = 0
+		tree.stump_sprite.z_index = 0
+		var character_is_behind_tree := global_position.distance_to(tree.global_position) <= TREE_OCCLUSION_RADIUS and player_feet_y < tree_base_y
+		for enemy_node in get_tree().get_nodes_in_group("enemies"):
+			if not is_instance_valid(enemy_node) or not enemy_node is Orc1Enemy:
+				continue
+			var enemy := enemy_node as Orc1Enemy
+			var enemy_feet_y := enemy.get_feet_y()
+			if enemy.global_position.distance_to(tree.global_position) <= TREE_OCCLUSION_RADIUS and enemy_feet_y < tree_base_y:
+				character_is_behind_tree = true
 		var tree_modulate := tree.tree_sprite.modulate
-		tree_modulate.a = TREE_OCCLUDED_ALPHA if player_is_behind_tree and player_is_near_tree else 1.0
+		tree_modulate.a = TREE_OCCLUDED_ALPHA if character_is_behind_tree else 1.0
 		tree.tree_sprite.modulate = tree_modulate
 
 	for node in get_tree().get_nodes_in_group("harvestable_gold"):
@@ -170,6 +181,9 @@ func _update_tree_sort_order() -> void:
 		var gold_modulate := gold.gold_sprite.modulate
 		gold_modulate.a = TREE_OCCLUDED_ALPHA if player_is_behind_gold and player_is_near_gold else 1.0
 		gold.gold_sprite.modulate = gold_modulate
+
+func _depth_sort_index(feet_y: float) -> int:
+	return clampi(roundi(feet_y * 0.5) + DEPTH_SORT_OFFSET, -4096, 4096)
 
 func _update_animation(direction: Vector2, sprinting: bool) -> void:
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):

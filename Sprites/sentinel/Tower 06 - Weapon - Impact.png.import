@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1mv1ptwl7e2r"
-path="res://.godot/imported/Tower 06 - Weapon - Impact.png-75020626d1438513ba9e1cb19c254171.ctex"
+uid="uid://dgaxv3lbi5qyq"
+path="res://.godot/imported/Tower 06 - Weapon - Impact.png-a97505345e1aede695190013406c05ae.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/sentinel/Tower 06 - Weapon - Impact.png"
-dest_files=["res://.godot/imported/Tower 06 - Weapon - Impact.png-75020626d1438513ba9e1cb19c254171.ctex"]
+source_file="res://Sprites/Sentinel/Tower 06 - Weapon - Impact.png"
+dest_files=["res://.godot/imported/Tower 06 - Weapon - Impact.png-a97505345e1aede695190013406c05ae.ctex"]
 
 [params]
 

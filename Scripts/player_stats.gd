@@ -2,17 +2,27 @@ extends Node
 class_name PlayerStats
 
 signal stamina_changed(current: float, maximum: float)
+signal health_changed(current: float, maximum: float)
 
+@export var max_health := 100.0
 @export var max_stamina := 100.0
 @export var stamina_drain_per_second := 30.0
 @export var stamina_recovery_per_second := 20.0
 @export var recovery_delay := 0.75
 
 var stamina: float
+var health: float
 var recovery_timer := 0.0
 
 func _ready() -> void:
+	health = max_health
 	stamina = max_stamina
+
+func take_damage(amount: float) -> void:
+	if amount <= 0.0 or health <= 0.0:
+		return
+	health = maxf(health - amount, 0.0)
+	health_changed.emit(health, max_health)
 
 func can_sprint() -> bool:
 	return stamina > 0.0
