@@ -1,13 +1,14 @@
 [gd_scene format=4 uid="uid://bfntrl0ah4crj"]
 
 [ext_resource type="PackedScene" uid="uid://cdf7om42uh078" path="res://Entities/player.tscn" id="1_hwkw7"]
-[ext_resource type="Texture2D" uid="uid://cfgivd5443il6" path="res://Sprites/TileSet/Tilemap_color1.png" id="2_572h1"]
-[ext_resource type="Texture2D" uid="uid://ca866jgtpeu0g" path="res://Sprites/Decorations/Bushes/Bushe1.png" id="3_tqllb"]
-[ext_resource type="Texture2D" uid="uid://bc7i1ms1uoavd" path="res://Sprites/Decorations/Bushes/Bushe2.png" id="4_topcr"]
-[ext_resource type="Texture2D" uid="uid://cpbkmn5w68ehn" path="res://Sprites/Decorations/Bushes/Bushe3.png" id="5_e8dex"]
-[ext_resource type="Texture2D" uid="uid://d2i3x2uy3at3t" path="res://Sprites/Decorations/Bushes/Bushe4.png" id="6_sxm1o"]
+[ext_resource type="Texture2D" uid="uid://b46eds54dtdlx" path="res://Sprites/TileSet/Tilemap_color1.png" id="2_572h1"]
+[ext_resource type="Texture2D" uid="uid://demx46yxser57" path="res://Sprites/Decorations/Bushes/Bushe1.png" id="3_tqllb"]
+[ext_resource type="Texture2D" uid="uid://dg856seccdske" path="res://Sprites/Decorations/Bushes/Bushe2.png" id="4_topcr"]
+[ext_resource type="Texture2D" uid="uid://bo5rkktoghnx7" path="res://Sprites/Decorations/Bushes/Bushe3.png" id="5_e8dex"]
+[ext_resource type="Texture2D" uid="uid://du18fk47o00cj" path="res://Sprites/Decorations/Bushes/Bushe4.png" id="6_sxm1o"]
 [ext_resource type="PackedScene" uid="uid://bty3b2w8imj1u" path="res://Entities/harvestable_tree.tscn" id="7_harvestable_tree"]
 [ext_resource type="PackedScene" uid="uid://dru70e7r3c3cs" path="res://Entities/harvestable_gold.tscn" id="8_topcr"]
+[ext_resource type="PackedScene" uid="uid://ceam4m0dra50b" path="res://Entities/orc_1_enemy.tscn" id="9_e8dex"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ag1y8"]
 texture = ExtResource("2_572h1")
@@ -1140,3 +1141,6 @@ position = Vector2(473, 612)
 
 [node name="harvestable_gold" parent="." unique_id=2072266862 instance=ExtResource("8_topcr")]
 position = Vector2(1074, 993)
+
+[node name="Orc1_enemy" parent="." unique_id=1864881837 instance=ExtResource("9_e8dex")]
+position = Vector2(1189, 899)

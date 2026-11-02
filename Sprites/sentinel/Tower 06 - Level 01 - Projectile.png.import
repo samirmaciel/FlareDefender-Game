@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxmidr5y0lf2k"
-path="res://.godot/imported/Tower 06 - Level 01 - Projectile.png-af43d2d20614594bb9b4ccd6ffd57c82.ctex"
+uid="uid://gnt1clwmdjch"
+path="res://.godot/imported/Tower 06 - Level 01 - Projectile.png-3bcaf46ee7fbe4a5f9222ee28013195b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/sentinel/Tower 06 - Level 01 - Projectile.png"
-dest_files=["res://.godot/imported/Tower 06 - Level 01 - Projectile.png-af43d2d20614594bb9b4ccd6ffd57c82.ctex"]
+source_file="res://Sprites/Sentinel/Tower 06 - Level 01 - Projectile.png"
+dest_files=["res://.godot/imported/Tower 06 - Level 01 - Projectile.png-3bcaf46ee7fbe4a5f9222ee28013195b.ctex"]
 
 [params]
 
