@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://vtwl3xmhc1c3"]
+
+[ext_resource type="Texture2D" uid="uid://dxmidr5y0lf2k" path="res://Sprites/sentinel/Tower 06 - Level 01 - Projectile.png" id="1_dhepc"]
+[ext_resource type="Script" uid="uid://37dlk4huixa7" path="res://Scripts/sentinel_level1_projectile.gd" id="2_projectile"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iroqa"]
+atlas = ExtResource("1_dhepc")
+region = Rect2(0, 0, 6, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ubw3"]
+atlas = ExtResource("1_dhepc")
+region = Rect2(6, 0, 6, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1431c"]
+atlas = ExtResource("1_dhepc")
+region = Rect2(12, 0, 6, 26)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_614an"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iroqa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ubw3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1431c")
+}],
+"loop": 1,
+"name": &"Fire",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_614an"]
+size = Vector2(10, 12)
+
+[node name="Sentinel_level1_projectile" type="Node2D" unique_id=664774590]
+script = ExtResource("2_projectile")
+
+[node name="Sentinel_level1_projectile_anim" type="AnimatedSprite2D" parent="." unique_id=2141792130]
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_614an")
+animation = &"Fire"
+autoplay = "Fire"
+frame_progress = 0.55026644
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1989375053]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=77768973]
+position = Vector2(0, -13)
+shape = SubResource("RectangleShape2D_614an")

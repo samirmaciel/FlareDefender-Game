@@ -1115,7 +1115,7 @@ tile_set = SubResource("TileSet_6n6ql")
 
 [node name="Player" parent="." unique_id=1442563100 instance=ExtResource("1_hwkw7")]
 position = Vector2(984, 747)
-held_item = 6
+held_item = 1
 
 [node name="HarvestableTree" parent="." unique_id=1605297398 instance=ExtResource("7_harvestable_tree")]
 position = Vector2(878, 851)

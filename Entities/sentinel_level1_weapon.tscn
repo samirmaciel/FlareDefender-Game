@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://ep3brp12hiot"]
+
+[ext_resource type="Texture2D" uid="uid://bs06qgi425phf" path="res://Sprites/sentinel/Tower 06 - Level 01 - Weapon.png" id="1_a8yya"]
+[ext_resource type="Script" uid="uid://beg6fi0c4wg6x" path="res://Scripts/sentinel_level1_weapon.gd" id="2_weapon"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eahux"]
+atlas = ExtResource("1_a8yya")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ty6wm"]
+atlas = ExtResource("1_a8yya")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_odl8t"]
+atlas = ExtResource("1_a8yya")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q6slw"]
+atlas = ExtResource("1_a8yya")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bl17k"]
+atlas = ExtResource("1_a8yya")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_043ir"]
+atlas = ExtResource("1_a8yya")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_haq3v"]
+atlas = ExtResource("1_a8yya")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y3dyr"]
+atlas = ExtResource("1_a8yya")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_614an"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eahux")
+}],
+"loop": 1,
+"name": &"Empty",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ty6wm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_odl8t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q6slw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bl17k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_043ir")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_haq3v")
+}],
+"loop": 1,
+"name": &"Fire",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y3dyr")
+}],
+"loop": 1,
+"name": &"Idle",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_614an"]
+size = Vector2(41, 47)
+
+[node name="Sentinel_level1_weapon" type="Node2D" unique_id=478280972]
+script = ExtResource("2_weapon")
+
+[node name="Sentinel_level1_weapon_anim" type="AnimatedSprite2D" parent="." unique_id=1568692022]
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_614an")
+animation = &"Fire"
+autoplay = "Idle"
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1027029905]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=341174718]
+position = Vector2(0.5, -4.5)
+shape = SubResource("RectangleShape2D_614an")

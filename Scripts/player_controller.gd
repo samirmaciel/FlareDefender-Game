@@ -8,13 +8,15 @@ signal held_item_changed(item: HeldItem)
 @export var move_speed := 240.0
 @export var sprint_speed := 360.0
 @export var sprint_animation_speed_scale := 1.6
-@export var held_item: HeldItem = HeldItem.PICKAXE
+@export var held_item: HeldItem = HeldItem.HAMMER
+@export var sentinel_scene: PackedScene = preload("res://Entities/sentinel_level1_weapon.tscn")
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var stats: PlayerStats = $PlayerStats
 
 var facing_left := false
 var is_interacting := false
+var sentinel_preview: SentinelLevel1Weapon
 
 const IDLE_ANIMATIONS := {
 	HeldItem.NONE: "Idle",
@@ -49,6 +51,7 @@ const TREE_OCCLUDED_ALPHA := 0.4
 const TREE_OCCLUSION_RADIUS := 80.0
 
 func _ready() -> void:
+	add_to_group("player")
 	animated_sprite.animation_finished.connect(_on_animation_finished)
 	animated_sprite.flip_h = false
 	# Item interactions should finish so the controller can return to idle/run.
@@ -65,11 +68,35 @@ func equip_item(item: HeldItem) -> void:
 		_play_if_needed(IDLE_ANIMATIONS[held_item])
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.physical_keycode == KEY_G:
+			_start_sentinel_placement()
+			get_viewport().set_input_as_handled()
+			return
+		if event.physical_keycode == KEY_ESCAPE and is_instance_valid(sentinel_preview):
+			sentinel_preview.queue_free()
+			sentinel_preview = null
+			get_viewport().set_input_as_handled()
+			return
+	if event is InputEventMouseButton and event.pressed and is_instance_valid(sentinel_preview):
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			sentinel_preview.global_position = get_global_mouse_position()
+			sentinel_preview.confirm_placement()
+			sentinel_preview = null
+			get_viewport().set_input_as_handled()
+			return
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			sentinel_preview.queue_free()
+			sentinel_preview = null
+			get_viewport().set_input_as_handled()
+			return
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT and not is_interacting and not Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 			_start_interaction()
 
 func _physics_process(_delta: float) -> void:
+	if is_instance_valid(sentinel_preview):
+		sentinel_preview.global_position = get_global_mouse_position()
 	_update_tree_sort_order()
 	var direction := Vector2.ZERO
 	direction.x = float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT))
@@ -98,6 +125,16 @@ func _physics_process(_delta: float) -> void:
 	velocity = direction * current_speed
 	move_and_slide()
 	_update_animation(direction, sprinting)
+
+func _start_sentinel_placement() -> void:
+	if is_instance_valid(sentinel_preview):
+		sentinel_preview.queue_free()
+		sentinel_preview = null
+		return
+	sentinel_preview = sentinel_scene.instantiate() as SentinelLevel1Weapon
+	get_tree().current_scene.add_child(sentinel_preview)
+	sentinel_preview.start_placement_preview()
+	sentinel_preview.global_position = get_global_mouse_position()
 
 func _update_tree_sort_order() -> void:
 	var player_feet_y := global_position.y
