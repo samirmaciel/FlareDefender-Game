@@ -9,6 +9,7 @@ class_name SentinelLevel1Weapon
 @onready var weapon_sprite: AnimatedSprite2D = $Sentinel_level1_weapon_anim
 
 var placement_preview := false
+var is_placement_valid := false
 var target: Node2D
 var fire_timer := 0.0
 var is_firing := false
@@ -23,8 +24,13 @@ func _ready() -> void:
 
 func start_placement_preview() -> void:
 	placement_preview = true
-	modulate = Color(0.0, 0.913, 0.0, 0.549)
+	set_placement_valid(false)
 	$StaticBody2D/CollisionShape2D.set_deferred("disabled", true)
+
+func set_placement_valid(is_valid: bool) -> void:
+	is_placement_valid = is_valid
+	if placement_preview:
+		modulate = Color(0.0, 0.913, 0.0, 0.549) if is_valid else Color(1.0, 0.1, 0.1, 0.549)
 
 func confirm_placement() -> void:
 	placement_preview = false
