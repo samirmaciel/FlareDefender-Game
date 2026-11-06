@@ -1062,6 +1062,14 @@ autoplay = "Idle"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=568440438]
 zoom = Vector2(0.7, 0.7)
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.75
+drag_top_margin = 0.75
+drag_right_margin = 0.75
+drag_bottom_margin = 0.75
 limit_left = -1800
 limit_top = -2050
 limit_right = 4200
