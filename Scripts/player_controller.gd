@@ -17,6 +17,8 @@ signal held_item_changed(item: HeldItem)
 var facing_left := false
 var is_interacting := false
 var sentinel_preview: SentinelLevel1Weapon
+var arena_center := Vector2.ZERO
+var arena_radius := 0.0
 
 const IDLE_ANIMATIONS := {
 	HeldItem.NONE: "Idle",
@@ -53,6 +55,7 @@ const DEPTH_SORT_OFFSET := 1030
 
 func _ready() -> void:
 	add_to_group("player")
+	_setup_arena_boundary()
 	animated_sprite.animation_finished.connect(_on_animation_finished)
 	animated_sprite.flip_h = false
 	# Item interactions should finish so the controller can return to idle/run.
@@ -112,6 +115,7 @@ func _physics_process(_delta: float) -> void:
 		velocity = Vector2.ZERO
 		stats.update_stamina(false, _delta)
 		move_and_slide()
+		_clamp_to_arena()
 		return
 
 	if absf(direction.x) > 0.01:
@@ -125,7 +129,33 @@ func _physics_process(_delta: float) -> void:
 	var current_speed := sprint_speed if sprinting else move_speed
 	velocity = direction * current_speed
 	move_and_slide()
+	_clamp_to_arena()
 	_update_animation(direction, sprinting)
+
+func _setup_arena_boundary() -> void:
+	var terrain := get_tree().current_scene.get_node_or_null("Tiles/Terrain") as TileMapLayer
+	if terrain == null or terrain.tile_set == null:
+		return
+	var used_cells := terrain.get_used_rect()
+	if used_cells.size.x <= 0 or used_cells.size.y <= 0:
+		return
+	var center_cell := used_cells.position + Vector2i(used_cells.size.x / 2, used_cells.size.y / 2)
+	arena_center = terrain.to_global(terrain.map_to_local(center_cell))
+	var tile_size := terrain.tile_set.tile_size
+	arena_radius = minf(used_cells.size.x * tile_size.x, used_cells.size.y * tile_size.y) * 0.5 - 24.0
+	arena_radius = maxf(arena_radius, 0.0)
+
+func _clamp_to_arena() -> void:
+	if arena_radius <= 0.0:
+		return
+	var offset := global_position - arena_center
+	if offset.length_squared() <= arena_radius * arena_radius:
+		return
+	var outward := offset.normalized()
+	global_position = arena_center + outward * arena_radius
+	var outward_speed := velocity.dot(outward)
+	if outward_speed > 0.0:
+		velocity -= outward * outward_speed
 
 func _start_sentinel_placement() -> void:
 	if is_instance_valid(sentinel_preview):

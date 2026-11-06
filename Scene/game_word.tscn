@@ -8,7 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://du18fk47o00cj" path="res://Sprites/Decorations/Bushes/Bushe4.png" id="6_sxm1o"]
 [ext_resource type="PackedScene" uid="uid://bty3b2w8imj1u" path="res://Entities/harvestable_tree.tscn" id="7_harvestable_tree"]
 [ext_resource type="PackedScene" uid="uid://dru70e7r3c3cs" path="res://Entities/harvestable_gold.tscn" id="8_topcr"]
-[ext_resource type="PackedScene" uid="uid://ceam4m0dra50b" path="res://Entities/orc_1_enemy.tscn" id="9_e8dex"]
+[ext_resource type="Script" uid="uid://dxe2u7ors03hb" path="res://Scripts/arena_fog.gd" id="10_arena_fog"]
+[ext_resource type="PackedScene" uid="uid://ceam4m0dra50b" path="res://Entities/orc_1_enemy.tscn" id="10_sxm1o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ag1y8"]
 texture = ExtResource("2_572h1")
@@ -1115,7 +1116,7 @@ tile_map_data = PackedByteArray("AAAvAEMAAAACAAIAAABcAD8AAAACAAIAAAA=")
 tile_set = SubResource("TileSet_6n6ql")
 
 [node name="Player" parent="." unique_id=1442563100 instance=ExtResource("1_hwkw7")]
-position = Vector2(984, 747)
+position = Vector2(-162, 1069)
 held_item = 1
 
 [node name="HarvestableTree" parent="." unique_id=1605297398 instance=ExtResource("7_harvestable_tree")]
@@ -1142,5 +1143,19 @@ position = Vector2(473, 612)
 [node name="harvestable_gold" parent="." unique_id=2072266862 instance=ExtResource("8_topcr")]
 position = Vector2(1074, 993)
 
-[node name="Orc1_enemy" parent="." unique_id=1864881837 instance=ExtResource("9_e8dex")]
-position = Vector2(1189, 899)
+[node name="ArenaFog" type="Node2D" parent="." unique_id=1823234979]
+script = ExtResource("10_arena_fog")
+
+[node name="FogShape" type="Sprite2D" parent="ArenaFog" unique_id=1308258821]
+
+[node name="Orc1_enemy" parent="." unique_id=1864881837 instance=ExtResource("10_sxm1o")]
+position = Vector2(-1702, 141)
+
+[node name="Orc1_enemy2" parent="." unique_id=1481676271 instance=ExtResource("10_sxm1o")]
+position = Vector2(-1745, -287)
+
+[node name="Orc1_enemy3" parent="." unique_id=171259308 instance=ExtResource("10_sxm1o")]
+position = Vector2(-1531, -642)
+
+[node name="Orc1_enemy4" parent="." unique_id=1378530812 instance=ExtResource("10_sxm1o")]
+position = Vector2(-1696, -122)
